@@ -78,7 +78,6 @@ def message_cb(bot, event):
                           {"text": "Ближайшие магазины", "callbackData": "shops", "style": "primary"},
                           {"text": "Новоти", "callbackData": "news", "style": "primary"}
                       ]])))
-
     else:
         ques = ''
         for mes in templates['answer']:
