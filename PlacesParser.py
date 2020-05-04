@@ -1,5 +1,6 @@
 import requests
 import time
+import sqlite3
 
 
 class PlacesParse:
@@ -7,25 +8,36 @@ class PlacesParse:
         self.key = 'AIzaSyBZ36mXHzroZxoaCdOIQSUL_-bCidW152w'
         self.types = "shop"
 
-    def getPharmacy(self, latitude, longitude):
+    def getPharmacy(self, userId):
+        db = sqlite3.connect('database.db')
+        cur = db.cursor()
+        cur.execute("SELECT * FROM Users WHERE Id = {}".format(userId))
+        data = cur.fetchall()[0]
+        db.close()
+        latitude = data[2]
+        longitude = data[3]
         name = "pharmacy"
-        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=200&types={}&name={}&key={}".format(latitude, longitude, self.types, name, self.key)
+        url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=100&types={}&name={}&key={}".format(latitude, longitude, self.types, name, self.key)
         data = requests.get(url)
-        print(url)
         response = data.json()['results']
         data = []
         for ph in response:
             data.append(
                 {
                     'name':ph['name'],
-                    'open_now':ph['opening_hours']['open_now'],
-                    'latutide':ph['geometry']['location']['lat'],
-                    'latutide':ph['geometry']['location']['lng'],
+                    'url': f"""https://www.google.com/maps/search/?api=1&query={ph['geometry']['location']['lat']},{ph['geometry']['location']['lng']}"""
                 }
             )
         return data
     
-    def getShop(self, latitude, longitude):
+    def getShop(self, userId):
+        db = sqlite3.connect('database.db')
+        cur = db.cursor()
+        cur.execute("SELECT * FROM Users WHERE Id = {}".format(userId))
+        data = cur.fetchall()[0]
+        db.close()
+        latitude = data[2]
+        longitude = data[3]
         name = "general+store"
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={},{}&radius=200&types={}&name={}&key={}".format(latitude, longitude, self.types, name, self.key)
         data = requests.get(url)
@@ -36,9 +48,10 @@ class PlacesParse:
             data.append(
                 {
                     'name':sh['name'],
-                    'open_now':sh['opening_hours']['open_now'],
-                    'latutide':sh['geometry']['location']['lat'],
-                    'latutide':sh['geometry']['location']['lng'],
+                    'url': f"""https://www.google.com/maps/search/?api=1&query={sh['geometry']['location']['lat']},{sh['geometry']['location']['lng']}"""
                 }
             )
         return data
+
+p = PlacesParse()
+print(p.getPharmacy(752446250))
