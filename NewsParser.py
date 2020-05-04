@@ -14,8 +14,6 @@ class NewsParser:
         covid = "COVID-19"
         virus = "вирус"
         for i in range(len(urls)):
-            print(urls)
-            print(data)
             u = urls[i]
             d = data[i]
             if (fuzz.partial_ratio(data[i], corona) > 80) or (fuzz.partial_ratio(data[i], covid) > 80) or (fuzz.partial_ratio(data[i], virus) > 80):
@@ -25,6 +23,8 @@ class NewsParser:
                         'url': str(u)
                     }
                 )
+            if len(pack) == 3:
+                break
         return(pack)
 
     def getHtml(self, url):
@@ -45,7 +45,6 @@ class NewsParser:
         counter = 0
         urls = []
         for i in range(3):
-            print(link_containers[i])
             a_tag = link_containers[i].find("a")
             # Если нашел
             if a_tag:
@@ -54,7 +53,6 @@ class NewsParser:
                     urls.append(urljoin(url, link))
             else:
                 counter += 1
-        print(f"Ошибок нашлось {counter}")
         return self.findCorona(urls, data)
         
 
@@ -77,7 +75,6 @@ class NewsParser:
                 urls.append(urljoin(url, link))
             else:
                 counter += 1
-        print(f"Ошибок нашлось {counter}")
         return self.findCorona(urls, data)
 
 def main():
