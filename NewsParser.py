@@ -23,6 +23,8 @@ class NewsParser:
                         'url': str(u)
                     }
                 )
+            if len(pack) == 3:
+                break
         return(pack)
 
     def getHtml(self, url):
@@ -67,7 +69,7 @@ class NewsParser:
                 data.append(text.text)
         counter = 0
         urls = []
-        for i in range(5):
+        for i in range(10):
             link = link_containers[i].get("href")
             if link != "?rcmd_alg=slotter":
                 urls.append(urljoin(url, link))

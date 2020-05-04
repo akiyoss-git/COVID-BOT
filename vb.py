@@ -65,6 +65,14 @@ def buttons_answer_cb(bot, event):
             {news['url']}"""
             bot.send_text(chat_id=event.data['from']['userId'],
             text=message)
+    bot.send_text(chat_id=event.data['from']['userId'],
+                      text="Что вам необходимо?",
+                      inline_keyboard_markup="{}".format(json.dumps([[
+                          {"text": "Статистика", "callbackData": "stats", "style": "attention"},
+                          {"text": "Ближайшие аптеки", "callbackData": "pharmacy", "style": "primary"},
+                          {"text": "Ближайшие магазины", "callbackData": "shops", "style": "primary"},
+                          {"text": "Новоти", "callbackData": "news", "style": "primary"}
+                      ]])))
 
 with open('answers.json', 'r', encoding="utf-8") as f:
     templates = json.load(f)
